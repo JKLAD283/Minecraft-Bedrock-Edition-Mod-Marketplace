@@ -72,13 +72,11 @@
             padding: 20px; 
             border-radius: 20px; 
             transition: var(--transition);
-            display: flex;
-            flex-direction: column;
         }
         
         .mod-card:hover { border-color: var(--primary); transform: translateY(-5px); }
 
-        .btn-group { display: flex; flex-direction: column; gap: 8px; margin-top: auto; padding-top: 15px; }
+        .btn-group { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
         .dl-btn { 
             padding: 10px; border-radius: 10px; text-decoration: none; 
             text-align: center; font-weight: 700; font-size: 0.8rem;
@@ -198,18 +196,16 @@
                 <input type="text" id="m-ad" placeholder="İçerik Adı" style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px; background:#000; border:1px solid var(--border-color); color:#fff;">
                 <textarea id="m-desc" placeholder="Açıklama" rows="3" style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px; background:#000; border:1px solid var(--border-color); color:#fff;"></textarea>
                 
-                <select id="m-cat" onchange="modalInputDuzenle()" style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px; background:#000; border:1px solid var(--border-color); color:#fff;">
-                    <option value="Birleşik">Birleşik</option>
+                <select id="m-cat" onchange="formuGuncelle()" style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px; background:#000; border:1px solid var(--border-color); color:#fff;">
                     <option value="Dünyalar">Dünyalar</option>
+                    <option value="Birleşik">Birleşik</option>
                     <option value="Kaynak">Kaynak</option>
                     <option value="Davranış">Davranış</option>
                 </select>
 
-                <div id="link-inputs">
-                    <input type="text" id="m-bp" placeholder="Behavior Pack / Dünya Linki" style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px; background:#000; border:1px solid var(--border-color); color:#fff;">
-                    <input type="text" id="m-rp" placeholder="Resource Pack Linki (Opsiyonel)" style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px; background:#000; border:1px solid var(--border-color); color:#fff;">
-                </div>
-
+                <input type="text" id="m-bp" placeholder="Dosya / BP Linki" style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px; background:#000; border:1px solid var(--border-color); color:#fff;">
+                <input type="text" id="m-rp" placeholder="Ek Link / RP Linki (Opsiyonel)" style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px; background:#000; border:1px solid var(--border-color); color:#fff;">
+                
                 <button onclick="modEkle()" class="dl-btn bp" style="width:100%; border:none; cursor:pointer;">Yayınla</button>
                 <p onclick="kapatModal('add-modal')" style="color:var(--danger); text-align:center; margin-top:15px; cursor:pointer;">İptal</p>
             </div>
@@ -229,18 +225,19 @@
         let MODLAR = JSON.parse(localStorage.getItem('mc_mods_data')) || varsayilanModlar;
         let aktifKat = "Hepsi";
 
-        // Dünyalar seçildiğinde modalı düzenleyen fonksiyon
-        function modalInputDuzenle() {
-            const cat = document.getElementById('m-cat').value;
-            const rpInput = document.getElementById('m-rp');
+        // Yeni: Formu kategoriye göre düzenleyen fonksiyon
+        function formuGuncelle() {
+            const kategori = document.getElementById('m-cat').value;
             const bpInput = document.getElementById('m-bp');
+            const rpInput = document.getElementById('m-rp');
 
-            if(cat === "Dünyalar") {
-                rpInput.style.display = "none";
-                bpInput.placeholder = "Dünya (.mcworld) Linki";
+            if(kategori === 'Dünyalar') {
+                bpInput.placeholder = "Dünya Dosyası (.mcworld) Linki";
+                rpInput.style.display = 'none';
+                rpInput.value = ""; // Gizlerken içini temizler
             } else {
-                rpInput.style.display = "block";
-                bpInput.placeholder = "Behavior Pack Linki";
+                bpInput.placeholder = "Dosya / BP Linki";
+                rpInput.style.display = 'block';
             }
         }
 
@@ -274,6 +271,7 @@
             document.getElementById('market-content').style.display = 'block';
             document.getElementById('user-display').innerText = email.split('@')[0].toUpperCase();
             modlariYükle();
+            formuGuncelle(); // Başlangıçta formu ayarla
         }
 
         function modlariYükle() {
@@ -290,10 +288,10 @@
                 <div class="mod-card">
                     <span style="color:var(--primary); font-size:0.7rem; font-weight:800;">${m.kategori}</span>
                     <h3 style="margin:5px 0;">${m.ad}</h3>
-                    <p style="font-size:0.85rem; color:#aaa; margin-bottom:15px;">${m.desc}</p>
+                    <p style="font-size:0.85rem; color:#aaa;">${m.desc}</p>
                     <div class="btn-group">
                         ${m.bp ? `<a href="${m.bp}" target="_blank" class="dl-btn bp">${m.kategori === 'Dünyalar' ? 'DÜNYAYI İNDİR' : 'DAVRANIŞ PAKETİ'}</a>` : ''}
-                        ${(m.rp && m.kategori !== 'Dünyalar') ? `<a href="${m.rp}" target="_blank" class="dl-btn rp">KAYNAK PAKETİ</a>` : ''}
+                        ${m.rp ? `<a href="${m.rp}" target="_blank" class="dl-btn rp">KAYNAK PAKETİ</a>` : ''}
                     </div>
                     ${m.korumali ? `<div style="font-size:0.6rem; color:var(--primary); margin-top:10px; text-align:center; opacity:0.7;">🛡️ DOĞRULANMIŞ İÇERİK</div>` : ''}
                     ${isDev && !m.korumali ? `<button onclick="modSil('${m.id}')" style="width:100%; margin-top:10px; background:none; border:1px solid var(--danger); color:var(--danger); padding:5px; border-radius:8px; cursor:pointer; font-size:0.7rem;">SİL</button>` : ''}
@@ -316,8 +314,8 @@
         }
 
         function acModal(id) { 
-            document.getElementById(id).style.display = 'flex'; 
-            modalInputDuzenle(); // Modal açıldığında inputları sıfırla/düzenle
+            document.getElementById(id).style.display = 'flex';
+            if(id === 'add-modal') formuGuncelle();
         }
         function kapatModal(id) { document.getElementById(id).style.display = 'none'; }
 
@@ -331,22 +329,15 @@
         function modEkle() {
             const ad = document.getElementById('m-ad').value;
             const desc = document.getElementById('m-desc').value;
-            const cat = document.getElementById('m-cat').value;
-            const bp = document.getElementById('m-bp').value;
-            let rp = document.getElementById('m-rp').value;
-
-            if(!ad || !desc || !bp) return alert("Ad, açıklama ve dosya linki zorunlu!");
+            if(!ad || !desc) return alert("Ad ve açıklama zorunlu!");
             
-            // Eğer kategori dünyaysa RP linkini boşaltıyoruz
-            if(cat === "Dünyalar") rp = "";
-
             const yeni = { 
                 id: "c_" + Date.now(), 
                 ad, 
                 desc, 
-                kategori: cat, 
-                bp: bp, 
-                rp: rp, 
+                kategori: document.getElementById('m-cat').value, 
+                bp: document.getElementById('m-bp').value, 
+                rp: document.getElementById('m-rp').value, 
                 korumali: false 
             };
             
@@ -371,7 +362,6 @@
                 document.getElementById('dev-toggle').checked = isDev;
                 document.getElementById('dev-btn-container').style.display = isDev ? 'block' : 'none';
             }
-            modlariYükle();
         };
     </script>
 </body>
