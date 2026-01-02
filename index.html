@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Minecraft Bedrock Mod Marketi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* --- CSS: DEĞİŞKENLER --- */
+        :root {
+            --primary: #2ecc71;
+            --primary-glow: rgba(46, 204, 113, 0.4);
+            --bg-dark: #0a0b10;
+            --card-bg: #151829;
+            --text-color: #f0f0f0;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --danger: #ff4d4d;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-color);
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% -20%, #1e2a20 0%, #0a0b10 100%);
+            overflow-x: hidden;
+        }
+
+        /* --- CSS: GİRİŞ EKRANI --- */
+        #auth-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center;
+        }
+
+        .auth-box {
+            background: var(--card-bg); padding: 50px; border-radius: 30px;
+            width: 90%; max-width: 420px; border: 1px solid var(--border-color);
+            text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .auth-box h2 { color: var(--primary); font-size: 2.2rem; font-weight: 900; margin-bottom: 30px; }
+
+        .auth-box input {
+            width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 15px;
+            background: rgba(0,0,0,0.4); border: 1px solid var(--border-color);
+            color: #fff; outline: none; transition: var(--transition);
+        }
+
+        .auth-box input:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
+
+        .auth-box button {
+            width: 100%; padding: 16px; background: var(--primary); border: none;
+            border-radius: 15px; font-weight: 800; font-size: 1.1rem; cursor: pointer;
+            transition: var(--transition); margin-top: 10px;
+        }
+
+        .auth-box button:hover { transform: scale(1.02); filter: brightness(1.1); box-shadow: 0 10px 20px var(--primary-glow); }
+
+        /* --- CSS: MARKET ARAYÜZÜ --- */
+        #market-content { display: none; }
+
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 8%; background: rgba(10, 11, 16, 0.95);
+            backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo { font-size: 1.8rem; font-weight: 900; }
+        .logo span { color: var(--primary); }
+
+        .user-controls { display: flex; align-items: center; gap: 15px; }
+        .control-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: #fff; padding: 10px 15px; border-radius: 12px; cursor: pointer; }
+
+        .hero-section { width: 90%; max-width: 900px; margin: 40px auto; }
+        .video-box { border-radius: 25px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+
+        .search-bar { width: 90%; max-width: 600px; margin: 30px auto; }
+        #modSearch { width: 100%; padding: 18px 30px; border-radius: 40px; background: var(--card-bg); border: 1px solid var(--border-color); color: #fff; outline: none; }
+
+        .categories { display: flex; justify-content: center; gap: 15px; padding: 20px; flex-wrap: wrap; }
+        .cat-btn { padding: 10px 25px; border-radius: 25px; border: 1px solid var(--border-color); background: var(--card-bg); color: #888; font-weight: 600; cursor: pointer; transition: var(--transition); }
+        .cat-btn.active { background: var(--primary) !important; color: #000 !important; box-shadow: 0 0 20px var(--primary-glow); transform: translateY(-3px); }
+
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; padding: 20px 8%; }
+        .mod-card { background: var(--card-bg); border: 1px solid var(--border-color); padding: 30px; border-radius: 25px; transition: var(--transition); position: relative; }
+        .mod-card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 15px 40px rgba(0,0,0,0.5); }
+
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+        .dl-btn { flex: 1; padding: 12px; border-radius: 12px; text-decoration: none; text-align: center; font-weight: 700; font-size: 0.85rem; }
+        .dl-btn.bp { background: var(--primary); color: #000; }
+        .dl-btn.rp { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--border-color); }
+
+        /* --- CSS: MODALLAR --- */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; backdrop-filter: blur(10px); align-items: center; justify-content: center; }
+        .modal-box { background: var(--card-bg); padding: 40px; border-radius: 25px; width: 90%; max-width: 500px; border: 1px solid var(--border-color); text-align: center; }
+        .modal-box input, .modal-box textarea, .modal-box select { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; background: #000; border: 1px solid var(--border-color); color: #fff; }
+
+        .delete-btn { width: 100%; margin-top: 15px; background: none; border: 1px solid var(--danger); color: var(--danger); padding: 8px; border-radius: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div id="auth-container">
+        <div class="auth-box">
+            <h2 id="auth-title">Giriş Yap</h2>
+            <input type="email" id="email" placeholder="E-posta Adresiniz">
+            <input type="password" id="password" placeholder="Şifreniz">
+            <button onclick="authAnaIslem()" id="auth-btn">Giriş Yap</button>
+            <p style="margin-top:20px; font-size:0.8rem; color:#888;"><span id="switch-text">Henüz üye değil misin?</span> <a href="#" onclick="toggleAuth()" id="switch-link" style="color:var(--primary); text-decoration:none; font-weight:800;">Kayıt Ol</a></p>
+        </div>
+    </div>
+
+    <div id="market-content">
+        <nav>
+            <div class="logo">MC<span>MARKET</span></div>
+            <div class="user-controls">
+                <span id="user-display" style="font-weight: 600; color: var(--primary);"></span>
+                <button onclick="acModal('settings-modal')" class="control-btn">⚙️</button>
+                <button onclick="cikis()" class="control-btn" style="color:var(--danger)">✕</button>
+            </div>
+        </nav>
+
+        <div class="hero-section">
+            <div class="video-box">
+                <iframe width="100%" height="450" src="https://www.youtube.com/embed/PzQHuKaBaIY" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" id="modSearch" placeholder="Mod ara..." onkeyup="arama()">
+        </div>
+
+        <div class="categories" id="cat-bar">
+            <button class="cat-btn active" onclick="filtrele('Hepsi', this)">Tüm Modlar</button>
+            <button class="cat-btn" onclick="filtrele('Kaynak', this)">Kaynak Paketi</button>
+            <button class="cat-btn" onclick="filtrele('Davranış', this)">Davranış Paketi</button>
+            <button class="cat-btn" onclick="filtrele('Birleşik', this)">Birleşik Paketler</button>
+        </div>
+
+        <div id="dev-btn-container" style="display: none; text-align: center; margin: 20px;">
+            <button onclick="acModal('add-modal')" style="background: var(--primary); border:none; padding:10px 30px; border-radius:30px; font-weight:800; cursor:pointer;">+ Yeni Mod Ekle</button>
+        </div>
+
+        <div class="grid-container" id="mod-grid"></div>
+    </div>
+
+    <div id="settings-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h3>Ayarlar</h3>
+            <div style="margin: 25px 0; text-align: left;">
+                <label>Geliştirici Modu (Admin):</label>
+                <input type="checkbox" id="dev-toggle" onchange="devModuToggle()" style="width: auto; margin-left: 10px;">
+            </div>
+            <button onclick="kapatModal('settings-modal')" class="dl-btn bp" style="width:100%">Kapat</button>
+        </div>
+    </div>
+
+    <div id="add-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h3>Mod Yayınla</h3>
+            <input type="text" id="m-ad" placeholder="Mod Adı">
+            <textarea id="m-desc" placeholder="Mod Açıklaması" rows="3"></textarea>
+            <select id="m-cat">
+                <option value="Birleşik">Birleşik</option>
+                <option value="Kaynak">Kaynak</option>
+                <option value="Davranış">Davranış</option>
+            </select>
+            <input type="text" id="m-bp" placeholder="Behavior Pack Linki">
+            <input type="text" id="m-rp" placeholder="Resource Pack Linki">
+            <button onclick="modEkle()" class="dl-btn bp" style="width:100%">Pazarda Yayınla</button>
+            <p onclick="kapatModal('add-modal')" style="color:var(--danger); cursor:pointer; margin-top:15px;">İptal</p>
+        </div>
+    </div>
+
+    <script>
+        /* --- JS: VERİ VE SİSTEM --- */
+        let isLoginMode = true;
+        let USERS = JSON.parse(localStorage.getItem('mc_users_list')) || [];
+        
+        const varsayilanModlar = [
+            { id: "e1", ad: "Extra Mod ✨", kategori: "Birleşik", desc: "Oyuna sınırsız yeni eşya ve blok katan efsanevi genişletme.", bp: "https://1drv.ms/u/c/e2b99ef10288716d/IQCiXn1c7L4WSZcvDM4KnWooAWWlt7PFfLSaIluOGZ5CRss", rp: "https://1drv.ms/u/c/e2b99ef10288716d/IQAzdX_cC1-WRqUaYm77W3DYAfUl3uRD8Y-FCX1HQbOiTK8", korumali: true },
+            { id: "e2", ad: "Ultra Hız Botu ⚡", kategori: "Davranış", desc: "Altın botları giydiğin an Flash'a dönüşürsün. Durdurulamaz hız!", bp: "https://1drv.ms/u/c/e2b99ef10288716d/IQBtrGJ1OZkjT4PpurCGEMNzAetf2dyw1hvLXr0-wheHQFc", rp: "", korumali: true },
+            { id: "e3", ad: "Sınırsız Yemek 🍎", kategori: "Davranış", desc: "Açlık barın asla azalmaz. Hayatta kalma modunda kral sensin.", bp: "https://1drv.ms/u/c/e2b99ef10288716d/IQA0QUT8uHV-RaijFOtLOiNTAR5LSNgWK-Bj-aTLxBktBrY", rp: "", korumali: true },
+            { id: "e4", ad: "Zümrüt Kılıç 💎", kategori: "Birleşik", desc: "Elmastan daha güçlü, zümrütlerle dövülmüş antik savaşçı kılıcı.", bp: "https://1drv.ms/u/c/e2b99ef10288716d/IQDt1kORWC8NS6LDkvuw3UeCAUGUDhKDvAZBr02fcjEAe9E", rp: "https://1drv.ms/u/c/e2b99ef10288716d/IQB0kpohFDC4S42BNhBuGYuXAR3Geug2oyA4KVKseqr8ky0", korumali: true },
+            { id: "e5", ad: "Süper Kılıç ⚔️", kategori: "Birleşik", desc: "Tek vuruşta her şeyi yok eder.", bp: "https://1drv.ms/u/c/e2b99ef10288716d/IQDfGXOy_tOUTaSMAK3WqxVrASDasq46hj3ARSbt3eBakLo", rp: "https://1drv.ms/u/c/e2b99ef10288716d/IQDAdNgyMSs3RY1mmDkGNvM6ARdFn0JrlTmUEIz2-EHQpwY", korumali: true },
+            { id: "e6", ad: "X-Ray Vision 💎", kategori: "Kaynak", desc: "Tüm elmasları duvar arkasından görün.", bp: "", rp: "https://1drv.ms/u/c/e2b99ef10288716d/IQAwXqdMBDXSQJDWAccbixNUAdicxLp2MS9ZMS7wqsZj29Q", korumali: true },
+            { id: "e7", ad: "Ultra Shader 🌈", kategori: "Kaynak", desc: "Gerçekçi ışıklandırma.", bp: "", rp: "https://1drv.ms/u/c/e2b99ef10288716d/IQBoo6sQkJSJRZblQwzCNRjUAT8o3Y5hTHwuBWD6VLlxQcI", korumali: true },
+            { id: "e8", ad: "Doğal Afetler 🌪️", kategori: "Davranış", desc: "Tsunami ve Hortum paketi.", bp: "https://1drv.ms/u/c/e2b99ef10288716d/IQAoAm4sp7IFTqoxOlkMq070AUIaCL9C8F35UihurnGszdU", rp: "", korumali: true }
+        ];
+
+        let MODLAR = JSON.parse(localStorage.getItem('mc_mods_data')) || varsayilanModlar;
+        let aktifKat = "Hepsi";
+
+        function toggleAuth() {
+            isLoginMode = !isLoginMode;
+            document.getElementById('auth-title').innerText = isLoginMode ? "Giriş Yap" : "Kayıt Ol";
+            document.getElementById('auth-btn').innerText = isLoginMode ? "Giriş Yap" : "Kayıt Ol";
+            document.getElementById('switch-text').innerText = isLoginMode ? "Henüz üye değil misin?" : "Zaten hesabın var mı?";
+            document.getElementById('switch-link').innerText = isLoginMode ? "Kayıt Ol" : "Giriş Yap";
+        }
+
+        function authAnaIslem() {
+            const email = document.getElementById('email').value.trim();
+            const pass = document.getElementById('password').value.trim();
+            if(!email || !pass) return alert("Boş bırakma kanka!");
+
+            if(isLoginMode) {
+                const user = USERS.find(u => u.email === email && u.pass === pass);
+                if(!user) return alert("Hatalı giriş!");
+                baslatMarket(email);
+            } else {
+                if(USERS.some(u => u.email === email)) return alert("Bu e-posta zaten kayıtlı kanka!");
+                USERS.push({ email, pass });
+                localStorage.setItem('mc_users_list', JSON.stringify(USERS));
+                alert("Kayıt başarılı! Şimdi giriş yap.");
+                toggleAuth();
+            }
+        }
+
+        function baslatMarket(email) {
+            document.getElementById('auth-container').style.display = 'none';
+            document.getElementById('market-content').style.display = 'block';
+            document.getElementById('user-display').innerText = email.split('@')[0].toUpperCase();
+            modlariYükle();
+        }
+
+        function modlariYükle() {
+            const grid = document.getElementById('mod-grid');
+            const isDev = localStorage.getItem('mc_admin') === 'true';
+            const filtreli = MODLAR.filter(m => aktifKat === "Hepsi" || m.kategori === aktifKat);
+            grid.innerHTML = filtreli.map(m => `
+                <div class="mod-card">
+                    <span style="color:var(--primary); font-size:0.7rem; font-weight:800; text-transform:uppercase;">${m.kategori}</span>
+                    <h3>${m.ad}</h3>
+                    <p>${m.desc}</p>
+                    <div class="btn-group">
+                        ${m.bp ? `<a href="${m.bp}" target="_blank" class="dl-btn bp">DAVRANIŞ İNDİR</a>` : ''}
+                        ${m.rp ? `<a href="${m.rp}" target="_blank" class="dl-btn rp">KAYNAK İNDİR</a>` : ''}
+                    </div>
+                    ${m.korumali ? `<div style="font-size:0.6rem; color:var(--primary); margin-top:10px; text-align:center;">🛡️ RESMİ MOD</div>` : ''}
+                    ${isDev && !m.korumali ? `<button onclick="modSil('${m.id}')" class="delete-btn">SİL</button>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function filtrele(kat, btn) {
+            aktifKat = kat;
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            modlariYükle();
+        }
+
+        function arama() {
+            const val = document.getElementById('modSearch').value.toLowerCase();
+            document.querySelectorAll('.mod-card').forEach(card => {
+                card.style.display = card.innerText.toLowerCase().includes(val) ? "block" : "none";
+            });
+        }
+
+        function acModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function kapatModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function devModuToggle() {
+            const check = document.getElementById('dev-toggle').checked;
+            localStorage.setItem('mc_admin', check);
+            document.getElementById('dev-btn-container').style.display = check ? 'block' : 'none';
+            modlariYükle();
+        }
+
+        function modEkle() {
+            const ad = document.getElementById('m-ad').value;
+            const desc = document.getElementById('m-desc').value;
+            if(!ad || !desc) return alert("Bilgileri doldur kanka!");
+            const yeni = { id: "c_" + Date.now(), ad, desc, kategori: document.getElementById('m-cat').value, bp: document.getElementById('m-bp').value, rp: document.getElementById('m-rp').value, korumali: false };
+            MODLAR.unshift(yeni);
+            localStorage.setItem('mc_mods_data', JSON.stringify(MODLAR));
+            modlariYükle();
+            kapatModal('add-modal');
+        }
+
+        function modSil(id) {
+            if(!confirm("Silinsin mi?")) return;
+            MODLAR = MODLAR.filter(m => m.id !== id);
+            localStorage.setItem('mc_mods_data', JSON.stringify(MODLAR));
+            modlariYükle();
+        }
+
+        function cikis() { location.reload(); }
+        window.onload = () => {
+            const isDev = localStorage.getItem('mc_admin') === 'true';
+            if(document.getElementById('dev-toggle')) {
+                document.getElementById('dev-toggle').checked = isDev;
+                document.getElementById('dev-btn-container').style.display = isDev ? 'block' : 'none';
+            }
+        };
+    </script>
+</body>
+</html>
