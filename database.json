@@ -1,0 +1,74 @@
+[
+  {
+    "id": "e1",
+    "ad": "Extra Mod ✨",
+    "kategori": "Birleşik",
+    "desc": "Oyuna sınırsız yeni eşya ve blok katan efsanevi genişletme.",
+    "bp": "https://1drv.ms/u/c/e2b99ef10288716d/IQCiXn1c7L4WSZcvDM4KnWooAWWlt7PFfLSaIluOGZ5CRss",
+    "rp": "https://1drv.ms/u/c/e2b99ef10288716d/IQAzdX_cC1-WRqUaYm77W3DYAfUl3uRD8Y-FCX1HQbOiTK8",
+    "korumali": true
+  },
+  {
+    "id": "e2",
+    "ad": "Ultra Hız Botu ⚡",
+    "kategori": "Davranış",
+    "desc": "Altın botları giydiğin an Flash'a dönüşürsün. Durdurulamaz hız!",
+    "bp": "https://1drv.ms/u/c/e2b99ef10288716d/IQBtrGJ1OZkjT4PpurCGEMNzAetf2dyw1hvLXr0-wheHQFc",
+    "rp": "",
+    "korumali": true
+  },
+  {
+    "id": "e3",
+    "ad": "Sınırsız Yemek 🍎",
+    "kategori": "Davranış",
+    "desc": "Açlık barın asla azalmaz. Hayatta kalma modunda kral sensin.",
+    "bp": "https://1drv.ms/u/c/e2b99ef10288716d/IQA0QUT8uHV-RaijFOtLOiNTAR5LSNgWK-Bj-aTLxBktBrY",
+    "rp": "",
+    "korumali": true
+  },
+  {
+    "id": "e4",
+    "ad": "Zümrüt Kılıç 💎",
+    "kategori": "Birleşik",
+    "desc": "Elmastan daha güçlü, zümrütlerle dövülmüş antik savaşçı kılıcı.",
+    "bp": "https://1drv.ms/u/c/e2b99ef10288716d/IQDt1kORWC8NS6LDkvuw3UeCAUGUDhKDvAZBr02fcjEAe9E",
+    "rp": "https://1drv.ms/u/c/e2b99ef10288716d/IQB0kpohFDC4S42BNhBuGYuXAR3Geug2oyA4KVKseqr8ky0",
+    "korumali": true
+  },
+  {
+    "id": "e5",
+    "ad": "Süper Kılıç ⚔️",
+    "kategori": "Birleşik",
+    "desc": "Tek vuruşta her şeyi yok eder.",
+    "bp": "https://1drv.ms/u/c/e2b99ef10288716d/IQDfGXOy_tOUTaSMAK3WqxVrASDasq46hj3ARSbt3eBakLo",
+    "rp": "https://1drv.ms/u/c/e2b99ef10288716d/IQDAdNgyMSs3RY1mmDkGNvM6ARdFn0JrlTmUEIz2-EHQpwY",
+    "korumali": true
+  },
+  {
+    "id": "e6",
+    "ad": "X-Ray Vision 💎",
+    "kategori": "Kaynak",
+    "desc": "Tüm elmasları duvar arkasından görün.",
+    "bp": "",
+    "rp": "https://1drv.ms/u/c/e2b99ef10288716d/IQAwXqdMBDXSQJDWAccbixNUAdicxLp2MS9ZMS7wqsZj29Q",
+    "korumali": true
+  },
+  {
+    "id": "e7",
+    "ad": "Ultra Shader 🌈",
+    "kategori": "Kaynak",
+    "desc": "Gerçekçi ışıklandırma ve gökyüzü efektleri.",
+    "bp": "",
+    "rp": "https://1drv.ms/u/c/e2b99ef10288716d/IQBoo6sQkJSJRZblQwzCNRjUAT8o3Y5hTHwuBWD6VLlxQcI",
+    "korumali": true
+  },
+  {
+    "id": "e8",
+    "ad": "Doğal Afetler 🌪️",
+    "kategori": "Davranış",
+    "desc": "Tsunami ve Hortum paketi ile dünyayı kaosa sürükle.",
+    "bp": "https://1drv.ms/u/c/e2b99ef10288716d/IQAoAm4sp7IFTqoxOlkMq070AUIaCL9C8F35UihurnGszdU",
+    "rp": "",
+    "korumali": true
+  }
+]
