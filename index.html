@@ -59,6 +59,24 @@
         .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: 1px; }
         .logo span { color: var(--primary); }
 
+        /* VİDEO ALANI */
+        .hero-section { padding: 20px 5%; }
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+
         .grid-container { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
@@ -85,7 +103,7 @@
         .dl-btn.bp { background: var(--primary); color: #000; }
         .dl-btn.rp { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--border-color); }
 
-        .categories { display: flex; overflow-x: auto; padding: 20px 5%; gap: 10px; scrollbar-width: none; }
+        .categories { display: flex; overflow-x: auto; padding: 10px 5% 20px 5%; gap: 10px; scrollbar-width: none; }
         .categories::-webkit-scrollbar { display: none; }
 
         .cat-btn {
@@ -127,8 +145,15 @@
             </div>
         </nav>
 
+        <div class="hero-section">
+            <h4 style="margin-bottom: 10px; color: var(--primary); font-size: 0.8rem; letter-spacing: 2px;">HAFTANIN VİDEOSU</h4>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/PzQHuKaBaIY" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+
         <div style="padding: 0 5%;">
-            <input type="text" id="modSearch" placeholder="Sunucuda ara..." onkeyup="arama()" style="width:100%; padding:15px; margin-top:20px; border-radius:15px; background:var(--card-bg); border:1px solid var(--border-color); color:#fff; outline:none;">
+            <input type="text" id="modSearch" placeholder="Sunucuda ara..." onkeyup="arama()" style="width:100%; padding:15px; border-radius:15px; background:var(--card-bg); border:1px solid var(--border-color); color:#fff; outline:none;">
         </div>
 
         <div class="categories" id="cat-bar">
@@ -147,7 +172,7 @@
     <div id="settings-modal" class="modal-overlay">
         <div class="modal-box">
             <h3 style="margin-bottom:20px;">Ayarlar</h3>
-            <p style="font-size: 0.8rem; color: #888;">Not: JSON tabanlı sunucu modunda mod ekleme işlemi database.json dosyası üzerinden yapılır.</p>
+            <p style="font-size: 0.8rem; color: #888;">Not: JSON tabanlı sunucu modunda modlar database.json üzerinden otomatik güncellenir.</p>
             <button onclick="kapatModal('settings-modal')" class="dl-btn bp" style="width:100%; border:none; cursor:pointer; margin-top: 10px;">Kapat</button>
         </div>
     </div>
@@ -155,21 +180,22 @@
     <script>
         let isLoginMode = true;
         let USERS = JSON.parse(localStorage.getItem('mc_users_list')) || [];
-        let MODLAR = []; // Başta boş, sunucudan gelecek
+        let MODLAR = []; 
         let aktifKat = "Hepsi";
 
-        // --- SUNUCUDAN VERİ ÇEKME FONKSİYONU ---
+        // ÖNEMLİ: Kendi GitHub kullanıcı adınla değiştirmeyi unutma!
+        const sunucuURL = "https://raw.githubusercontent.com/JKLAD283/Minecraft-Bedrock-Edition-Mod-Marketplace/main/database.json";
+
         async function sunucudanModlariGetir() {
             try {
-                // Kendi GitHub kullanıcı adınla değiştir!
-                const sunucuURL = "https://raw.githubusercontent.com/JKLAD283/Minecraft-Bedrock-Edition-Mod-Marketplace/main/database.json";
                 const response = await fetch(sunucuURL);
+                if(!response.ok) throw new Error("Dosya bulunamadı");
                 const data = await response.json();
                 MODLAR = data;
                 modlariYükle();
             } catch (error) {
                 console.error("Sunucu hatası:", error);
-                document.getElementById('mod-grid').innerHTML = `<div class="empty-msg" style="color:var(--danger)">Sunucuya bağlanılamadı! database.json dosyasını kontrol et.</div>`;
+                document.getElementById('mod-grid').innerHTML = `<div class="empty-msg" style="color:var(--danger)">Sunucuya bağlanılamadı! database.json dosyasını GitHub'a yüklediğinden emin ol.</div>`;
             }
         }
 
@@ -202,7 +228,7 @@
             document.getElementById('auth-container').style.display = 'none';
             document.getElementById('market-content').style.display = 'block';
             document.getElementById('user-display').innerText = email.split('@')[0].toUpperCase();
-            sunucudanModlariGetir(); // Market açılınca sunucuya sorar
+            sunucudanModlariGetir();
         }
 
         function modlariYükle() {
@@ -210,7 +236,7 @@
             const filtreli = MODLAR.filter(m => aktifKat === "Hepsi" || m.kategori === aktifKat);
             
             if (filtreli.length === 0) {
-                grid.innerHTML = `<div class="empty-msg">Sunucuda bu kategoride mod bulunamadı.</div>`;
+                grid.innerHTML = `<div class="empty-msg">Bu kategoride henüz içerik yok.</div>`;
                 return;
             }
 
@@ -223,7 +249,7 @@
                         ${m.bp ? `<a href="${m.bp}" target="_blank" class="dl-btn bp">${m.kategori === 'Dünyalar' ? 'DÜNYAYI İNDİR' : 'DAVRANIŞ PAKETİ'}</a>` : ''}
                         ${m.rp ? `<a href="${m.rp}" target="_blank" class="dl-btn rp">KAYNAK PAKETİ</a>` : ''}
                     </div>
-                    ${m.korumali ? `<div style="font-size:0.6rem; color:var(--primary); margin-top:10px; text-align:center; opacity:0.7;">🛡️ DOĞRULANMIŞ SUNUCU MODU</div>` : ''}
+                    ${m.korumali ? `<div style="font-size:0.6rem; color:var(--primary); margin-top:10px; text-align:center; opacity:0.7;">🛡️ DOĞRULANMIŞ MOD</div>` : ''}
                 </div>
             `).join('');
         }
